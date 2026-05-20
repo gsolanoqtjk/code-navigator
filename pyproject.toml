@@ -68,6 +68,8 @@ ast = [
     "tree-sitter-ruby>=0.23.0; python_version>='3.9'",
     "tree-sitter-go>=0.23.0; python_version>='3.9'",
     "tree-sitter-rust>=0.23.0; python_version>='3.9'",
+    # tree-sitter-dart: no PyPI release with tree-sitter>=0.23 API yet;
+    # DartAnalyzer falls back to GenericAnalyzer (regex) automatically.
 ]
 graph = [
     "networkx>=3.0",

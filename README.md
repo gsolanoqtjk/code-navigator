@@ -267,12 +267,33 @@ If you have multiple Python installations:
 | Ruby | AST (tree-sitter)* | ⭐⭐⭐⭐ |
 | Go | AST (tree-sitter)* | ⭐⭐⭐⭐ |
 | Rust | AST (tree-sitter)* | ⭐⭐⭐⭐ |
+| Dart / Flutter | AST (tree-sitter, compiled)** | ⭐⭐⭐⭐ |
 | Java | Regex-based | ⭐⭐⭐ |
 | C/C++ | Regex-based | ⭐⭐⭐ |
 | PHP | Regex-based | ⭐⭐⭐ |
 
 *Install tree-sitter support: `pip install codenav[ast]`
 All tree-sitter analyzers fall back to regex when tree-sitter is not installed.
+
+**Dart uses a locally compiled grammar (no PyPI package exists yet). See [Dart/Flutter setup](#dartflutter-setup) below.
+
+### Dart/Flutter setup
+
+`tree-sitter-dart` is not published on PyPI. To enable AST-level analysis (classes, methods with parent, constructors, mixins, extensions, enums), compile the grammar locally:
+
+```bash
+# 1. Clone the Dart grammar
+git clone https://github.com/UserNobody14/tree-sitter-dart ~/tree-sitter-dart
+
+# 2. Compile to shared library (requires clang — pre-installed on macOS)
+cd ~/tree-sitter-dart
+clang -shared -fPIC -o dart.dylib src/parser.c src/scanner.c -I src
+
+# 3. Copy into the package
+cp dart.dylib /path/to/codenav/src/codenav/dart.dylib
+```
+
+Without the compiled library, Dart files are still analyzed via regex fallback (detects classes, enums, mixins, extensions, top-level functions).
 
 ---
 

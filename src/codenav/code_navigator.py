@@ -50,6 +50,7 @@ LANGUAGE_EXTENSIONS = {
     "cpp": [".cpp", ".hpp", ".cc", ".hh", ".cxx"],
     "ruby": [".rb"],
     "php": [".php"],
+    "dart": [".dart"],
 }
 
 DEFAULT_IGNORE_PATTERNS = [
@@ -73,6 +74,13 @@ DEFAULT_IGNORE_PATTERNS = [
     "target",
     "bin",
     "obj",
+    # Flutter/Dart build artifacts and generated files
+    ".dart_tool",
+    ".flutter-plugins",
+    ".flutter-plugins-dependencies",
+    "*.g.dart",
+    "*.freezed.dart",
+    "*.gr.dart",
     # Version control
     ".git",
     ".svn",
@@ -456,6 +464,13 @@ class GenericAnalyzer:
             "impl": r"impl(?:<[^>]*>)?\s+(\w+)",
             "trait": r"(?:pub\s+)?trait\s+(\w+)",
             "enum": r"(?:pub\s+)?enum\s+(\w+)",
+        },
+        "dart": {
+            "class": r"(?:abstract\s+)?class\s+(\w+)",
+            "mixin": r"^[ \t]*mixin\s+(\w+)",
+            "enum": r"enum\s+(\w+)\s*\{",
+            "extension": r"extension\s+(\w+)\s+on\s+\w+",
+            "function": r"^[ \t]*(?:Future<?[^>]*>?|void|String|int|double|bool|dynamic|\w+\??)\s+(\w+)\s*\([^)]*\)\s*(?:async\s*)?\{",
         },
     }
 
@@ -882,6 +897,10 @@ class CodeNavigator:
                 from .rust_analyzer import RustAnalyzer
 
                 analyzer = RustAnalyzer(rel_path, content)
+            elif language == "dart":
+                from .dart_analyzer import DartAnalyzer
+
+                analyzer = DartAnalyzer(rel_path, content)
             elif language:
                 analyzer = GenericAnalyzer(rel_path, content, language)
             else:
